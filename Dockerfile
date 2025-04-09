@@ -1,19 +1,21 @@
-FROM node:22
+FROM node:22.12-alpine AS builder
 
-# Install Nginx and supervisor
-RUN apt-get update && apt-get install -y nginx supervisor gettext-base && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY ./ /app
 
-# Install required Node.js packages
-RUN npm install -g @tiangong-ai/mcp-server supergateway
+WORKDIR /app
 
-# Copy Nginx default configuration
-COPY docker/default.template /etc/nginx/templates/defualt.template
+RUN --mount=type=cache,target=/root/.npm npm install
 
-# Setup supervisor configuration
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+FROM node:22-alpine AS release
 
-# Expose ports
-EXPOSE 80
+WORKDIR /app
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/package.json /app/package.json
+COPY --from=builder /app/package-lock.json /app/package-lock.json
+
+ENV NODE_ENV=production
+
+RUN npm ci --ignore-scripts --omit-dev
+
+ENTRYPOINT ["node", "dist/index.js"]
