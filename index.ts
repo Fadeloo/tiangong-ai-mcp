@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { RestServerTransport } from '@chatmcp/sdk/server/rest.js';
 import { getAuthValue, getParamValue } from '@chatmcp/sdk/utils/index.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -11,7 +13,7 @@ import { searchEsg, SearchEsgTool } from './src/tools/esg.js';
 //   process.exit(1);
 // }
 
-const x_api_key = getParamValue('x_api_key') || '';
+const x_api_key = process.env.X_API_KEY ?? getParamValue('x_api_key') ?? '';
 
 const mode = getParamValue('mode') || 'stdio';
 const port = getParamValue('port') || 9593;

@@ -6,7 +6,7 @@
   "author": "Nan LI",
   "type": "module",
   "bin": {
-    "mcp-server": "dist/src/index.js"
+    "mcp-server": "dist/index.js"
   },
   "files": [
     "dist"
