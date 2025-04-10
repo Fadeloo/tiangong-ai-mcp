@@ -7,7 +7,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { searchEsg, SearchEsgTool } from './src/tools/esg.js';
 
-
 const x_api_key = process.env.X_API_KEY ?? getParamValue('x_api_key') ?? '';
 
 const mode = getParamValue('mode') || 'stdio';
