@@ -1,7 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 
 import cleanObject from './_shared/clean_object.js';
-import { base_url, supabase_anon_key, x_api_key, x_region } from './_shared/config.js';
+import { base_url, supabase_anon_key, x_region } from './_shared/config.js';
 
 const input_schema = {
   type: 'object' as const,
@@ -71,29 +71,32 @@ const input_schema = {
   required: ['query'],
 };
 
-export async function searchEsg({
-  query,
-  topK,
-  extK,
-  metaContains,
-  filter,
-  dateFilter,
-}: {
-  query: string;
-  topK?: number;
-  extK?: number;
-  metaContains?: string;
-  filter?: {
-    rec_id?: string[];
-    country?: string[];
-  };
-  dateFilter?: {
-    publication_date?: {
-      gte?: number;
-      lte?: number;
+export async function searchEsg(
+  x_api_key: string,
+  {
+    query,
+    topK,
+    extK,
+    metaContains,
+    filter,
+    dateFilter,
+  }: {
+    query: string;
+    topK?: number;
+    extK?: number;
+    metaContains?: string;
+    filter?: {
+      rec_id?: string[];
+      country?: string[];
     };
-  };
-}): Promise<string> {
+    dateFilter?: {
+      publication_date?: {
+        gte?: number;
+        lte?: number;
+      };
+    };
+  },
+): Promise<string> {
   const url = `${base_url}/esg_search`;
   // console.error('URL:', url);
   try {

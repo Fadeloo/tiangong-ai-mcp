@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import cleanObject from './_shared/clean_object.js';
-import { base_url, supabase_anon_key, x_api_key, x_region } from './_shared/config.js';
+import { base_url, supabase_anon_key, x_region } from './_shared/config.js';
 
 const input_schema = {
   query: z.string().min(1).describe('Requirements or questions from the user.'),
@@ -34,27 +34,30 @@ const input_schema = {
     ),
 };
 
-async function searchSci({
-  query,
-  topK,
-  extK,
-  filter,
-  dateFilter,
-}: {
-  query: string;
-  topK: number;
-  extK: number;
-  filter?: {
-    journal?: string[];
-    doi?: string[];
-  };
-  dateFilter?: {
-    date?: {
-      gte?: number;
-      lte?: number;
+async function searchSci(
+  x_api_key: string,
+  {
+    query,
+    topK,
+    extK,
+    filter,
+    dateFilter,
+  }: {
+    query: string;
+    topK: number;
+    extK: number;
+    filter?: {
+      journal?: string[];
+      doi?: string[];
     };
-  };
-}): Promise<string> {
+    dateFilter?: {
+      date?: {
+        gte?: number;
+        lte?: number;
+      };
+    };
+  },
+): Promise<string> {
   const url = `${base_url}/sci_search`;
   try {
     const response = await fetch(url, {
@@ -92,7 +95,7 @@ export function regSciTool(server: McpServer) {
     'Perform search on academic database for precise and specialized information.',
     input_schema,
     async ({ query, topK, extK, filter, dateFilter }, extra) => {
-      const result = await searchSci({
+      const result = await searchSci('',{
         query,
         topK,
         extK,

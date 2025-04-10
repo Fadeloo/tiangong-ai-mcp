@@ -7,8 +7,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { searchEsg, SearchEsgTool } from './src/tools/esg.js';
 
-const x_api_key = process.env.X_API_KEY ?? getParamValue('x_api_key') ?? '';
-
 const mode = getParamValue('mode') || 'stdio';
 const port = getParamValue('port') || 9593;
 const endpoint = getParamValue('endpoint') || '/rest';
@@ -31,10 +29,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 
 server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
   try {
-    // before: use global params
-
-    // after: get auth params from request, if global params not set
-    const apiKey = x_api_key || getAuthValue(request, 'X_API_KEY');
+    const apiKey = process.env.X_API_KEY ?? getAuthValue(request, 'X_API_KEY');
     if (!apiKey) {
       throw new Error('X_API_KEY not set');
     }
@@ -50,12 +45,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
         // }
 
         const query = args.query;
+
         if (typeof query !== 'string') {
           throw new Error("Invalid arguments: 'query' must be a string");
         }
 
         // after: pass params to every function
-        const result = await searchEsg({ query });
+        const result = await searchEsg(apiKey, { query });
 
         return {
           content: [{ type: 'text', text: result }],
