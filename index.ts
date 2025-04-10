@@ -6,6 +6,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { searchEsg, SearchEsgTool } from './src/tools/esg.js';
+import { searchSci, SearchSCITool } from './src/tools/sci.js';
 
 const mode = getParamValue('mode') || 'stdio';
 const port = getParamValue('port') || 9593;
@@ -24,7 +25,7 @@ const server = new Server(
 );
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: [SearchEsgTool],
+  tools: [SearchEsgTool, SearchSCITool],
 }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
@@ -40,10 +41,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     }
     switch (name) {
       case 'Search_ESG_Tool': {
-        // if (!Array.isArray(args.messages)) {
-        //   throw new Error("Invalid arguments for perplexity_ask: 'messages' must be an array");
-        // }
-
         const query = args.query;
 
         if (typeof query !== 'string') {
@@ -52,6 +49,21 @@ server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
 
         // after: pass params to every function
         const result = await searchEsg(apiKey, { query });
+
+        return {
+          content: [{ type: 'text', text: result }],
+          isError: false,
+        };
+      }
+      case 'Search_SCI_Tool': {
+        const query = args.query;
+
+        if (typeof query !== 'string') {
+          throw new Error("Invalid arguments: 'query' must be a string");
+        }
+
+        // after: pass params to every function
+        const result = await searchSci(apiKey, { query });
 
         return {
           content: [{ type: 'text', text: result }],
