@@ -1,0 +1,56 @@
+name: tiangong-ai
+
+params:
+  type: object
+  properties:
+    TIANGONG_AI_API_KEY:
+      type: string
+      description: Tiangong AI API Key
+  required:
+    - TIANGONG_AI_API_KEY
+
+rest:
+  port: 9593
+  endpoint: /rest
+
+npx:
+  command:
+    | TIANGONG_AI_API_KEY={TIANGONG_AI_API_KEY} npx -y server-tiangong-ai
+  config:
+    | {
+        "mcpServers": {
+          "tiangong-ai": {
+            "command": "npx",
+            "args": [
+              "-y",
+              "server-tiangong-ai"
+            ],
+            "env": {
+              "TIANGONG_AI_API_KEY": "TIANGONG_AI_API_KEY"
+            }
+          }
+        }
+      }
+
+docker:
+  command:
+    | docker run -i --rm -e TIANGONG_AI_API_KEY={TIANGONG_AI_API_KEY} mcp/tiangong-ai
+  config:
+    | {
+        "mcpServers": {
+          "tiangong-ai": {
+            "command": "docker",
+            "args": [
+              "run",
+              "-i",
+              "--rm",
+              "-e",
+              "TIANGONG_AI_API_KEY",
+              "mcp/tiangong-ai"
+            ],
+            "env": {
+              "TIANGONG_AI_API_KEY": "YOUR_API_KEY_HERE"
+            }
+          }
+        }
+      }
