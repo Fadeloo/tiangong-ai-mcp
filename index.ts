@@ -7,11 +7,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { searchEsg, SearchEsgTool } from './src/tools/esg.js';
 
-// const x_api_key = process.env.X_API_KEY;
-// if (!x_api_key) {
-//   console.error('Error: X_API_KEY environment variable is required');
-//   process.exit(1);
-// }
 
 const x_api_key = process.env.X_API_KEY ?? getParamValue('x_api_key') ?? '';
 
