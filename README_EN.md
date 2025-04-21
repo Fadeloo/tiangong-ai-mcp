@@ -32,17 +32,17 @@ npx -y supergateway \
 
 ```bash
 # Build MCP server image using Dockerfile (optional)
-docker build -t linancn/tiangong-ai-mcp-server:0.0.8 .
+docker build -t linancn/tiangong-ai-mcp-server:0.0.10 .
 
 # Pull MCP server image
-docker pull linancn/tiangong-ai-mcp-server:0.0.8
+docker pull linancn/tiangong-ai-mcp-server:0.0.10
 
 # Start MCP server using Docker
 docker run -d \
     --name tiangong-ai-mcp-server \
-    --publish 3001:80 \
+    --publish 3001:9593 \
     --env-file .env \
-    linancn/tiangong-ai-mcp-server:0.0.8
+    linancn/tiangong-ai-mcp-server:0.0.10
 ```
 
 ## Development
@@ -90,7 +90,7 @@ npm install -g supergateway
 # Launch the SSE Server (If the parameter --baseUrl is configured, it should be set to a valid IP address or domain name)
 npx dotenv -e .env -- \
 npx -y supergateway \
-    --stdio "npx -y tiangong-ai-mcp-server-0.0.8.tgz" \
+    --stdio "npx -y tiangong-ai-mcp-server-0.0.10.tgz" \
     --port 3001 \
     --ssePath /sse \
     --messagePath /message
