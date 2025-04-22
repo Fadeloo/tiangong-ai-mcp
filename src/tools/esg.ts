@@ -1,7 +1,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 
-import cleanObject from './_shared/clean_object.js';
-import { base_url, supabase_anon_key, x_region } from './_shared/config.js';
+import cleanObject from '../_shared/clean_object.js';
+import { base_url, supabase_anon_key, x_region } from '../_shared/config.js';
 
 const input_schema = {
   type: 'object' as const,
